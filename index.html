@@ -37,7 +37,7 @@
 
     body {
       margin: 0;
-      height: 100vh;
+      height: var(--height);
       width: 100vw;
       font-family: 'Helvetica Neue', sans-serif;
       display: flex;
@@ -97,6 +97,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
+      background-image: var(--logo);
       width: 16em;
       height: 3em;
       margin: 3em auto 0 auto;
@@ -136,8 +137,9 @@
   </main>
 
   <script>
+    const $html = document.documentElement
+
     const animation = {
-      $logo: document.querySelector('.js-logo'),
       interval: 500,
       steps: [
         'one',
@@ -149,12 +151,20 @@
       ]
     }
 
-    ;(updateLogo = (animation, index) => {
-      const { $logo, interval, steps } = animation
-      $logo.style.backgroundImage = `url(/sprite.svg#${steps[index]})`
+    const setBackground = ($html, step) => {
+      $html.style.setProperty(
+        '--logo',
+        `url(/sprite.svg#${step})`
+      )
+    }
+
+    ;(updateLogo = ($html, animation, index) => {
+      const { interval, steps } = animation
+      setBackground($html, steps[index])
 
       setTimeout(
         () => updateLogo(
+          $html,
           animation,
           index === steps.length - 1
             ? 0
@@ -162,7 +172,16 @@
         ),
         interval
       )
-    })(animation, 0)
+    })($html, animation, 0)
+
+    ;(setPageHeight = ({ style }) => {
+      style.setProperty('--height', `${window.innerHeight}px`)
+    })($html)
+
+    window.addEventListener(
+      'resize',
+      () => setPageHeight($html)
+    )
   </script>
 </body>
 </html>
