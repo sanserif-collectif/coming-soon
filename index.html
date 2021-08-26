@@ -138,8 +138,6 @@
   </main>
 
   <script>
-    const $html = document.documentElement
-
     const animation = {
       interval: 500,
       steps: [
@@ -152,20 +150,23 @@
       ]
     }
 
-    const setBackground = ($html, step) => {
-      $html.style.setProperty(
+    const setProperty = (property, value) => {
+      const { style } = document.documentElement
+      style.setProperty(property, value)
+    }
+
+    const setLogo = step => {
+      setProperty(
         '--logo',
         `url(/sprite.svg#${step})`
       )
     }
 
-    ;(updateLogo = ($html, animation, index) => {
+    !(updateLogo = (animation, index) => {
       const { interval, steps } = animation
-      setBackground($html, steps[index])
-
+      setLogo(steps[index])
       setTimeout(
         () => updateLogo(
-          $html,
           animation,
           index === steps.length - 1
             ? 0
@@ -173,15 +174,16 @@
         ),
         interval
       )
-    })($html, animation, 0)
+    })(animation, 0)
 
-    ;(setPageHeight = ({ style }) => {
-      style.setProperty('--height', `${window.innerHeight}px`)
-    })($html)
+    !(setPageHeight = () => setProperty(
+      '--height',
+      `${window.innerHeight}px`
+    ))()
 
     window.addEventListener(
       'resize',
-      () => setPageHeight($html)
+      () => setPageHeight()
     )
   </script>
 </body>
