@@ -155,12 +155,10 @@
       style.setProperty(property, value)
     }
 
-    const setLogo = step => {
-      setProperty(
-        '--logo',
-        `url(/sprite.svg#${step})`
-      )
-    }
+    const setLogo = step => setProperty(
+      '--logo',
+      `url(/sprite.svg#${step})`
+    )
 
     !(updateLogo = (animation, index) => {
       const { interval, steps } = animation
